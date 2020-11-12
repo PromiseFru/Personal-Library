@@ -40,11 +40,12 @@ module.exports = function (app) {
       //json res format: [{"_id": bookid, "title": book_title, "commentcount": num_of_comments },...]
     })
 
-    // TODO - I can post a title to /api/books to add a book and returned will be the object with the title and a unique _id.
     .post(function (req, res) {
       try {
         var title = req.body.title;
 
+        if(!title) return res.json('No title');
+        
         mongoose.connect(MONGODB_CONNECTION_STRING, {
             useNewUrlParser: true,
             useUnifiedTopology: true
