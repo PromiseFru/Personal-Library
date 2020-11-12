@@ -13,8 +13,15 @@
 // var ObjectId = require('mongodb').ObjectId;
 var mongoose = require('mongoose');
 require('dotenv').config();
+var Schema = mongoose.Schema;
 const MONGODB_CONNECTION_STRING = process.env.DB;
-//Example connection: MongoClient.connect(MONGODB_CONNECTION_STRING, function(err, db) {});
+
+var bookSchema = new Schema({
+  title: String,
+  comment: []
+})
+
+var Book = mongoose.model('Book', bookSchema);
 
 mongoose.connect(MONGODB_CONNECTION_STRING, {
     useNewUrlParser: true
@@ -35,7 +42,8 @@ module.exports = function (app) {
     // TODO - I can post a title to /api/books to add a book and returned will be the object with the title and a unique _id.
     .post(function (req, res) {
       var title = req.body.title;
-      //response will contain new book object including atleast _id and title
+
+
     })
 
     // TODO - I can send a delete request to /api/books to delete all books in the database. Returned will be 'complete delete successful' if successful.
