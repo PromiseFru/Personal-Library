@@ -24,7 +24,8 @@ var bookSchema = new Schema({
 var Book = mongoose.model('Book', bookSchema);
 
 mongoose.connect(MONGODB_CONNECTION_STRING, {
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useUnifiedTopology: true
   })
   .then(() => console.log('Database Connected'))
   .catch(err => console.log(err));
@@ -41,9 +42,30 @@ module.exports = function (app) {
 
     // TODO - I can post a title to /api/books to add a book and returned will be the object with the title and a unique _id.
     .post(function (req, res) {
-      var title = req.body.title;
+      try {
+        var title = req.body.title;
 
-
+        mongoose.connect(MONGODB_CONNECTION_STRING, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+          })
+          .then(() => {
+            Book.create({
+              title: title
+            }, (err, book) => {
+              if (err) {
+                console.log(err);
+                return res.json('could not create book');
+              }
+              res.json(book);
+            })
+          }).catch(err => {
+            console.log(err);
+            return res.json('could not create book');
+          })
+      } catch {
+        err => console.log(err)
+      };
     })
 
     // TODO - I can send a delete request to /api/books to delete all books in the database. Returned will be 'complete delete successful' if successful.
