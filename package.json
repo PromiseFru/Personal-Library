@@ -4,7 +4,9 @@
 	"description": "boilerplate",
 	"main": "server.js",
 	"scripts": {
-		"start": "node server.js"
+		"start": "node server.js",
+		"devstart": "nodemon server.js",
+		"test": "NODE_ENV=test nodemon server.js"
 	},
 	"dependencies": {
 		"body-parser": "^1.15.2",
