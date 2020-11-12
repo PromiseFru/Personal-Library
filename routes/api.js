@@ -18,7 +18,7 @@ const MONGODB_CONNECTION_STRING = process.env.DB;
 
 var bookSchema = new Schema({
   title: String,
-  comment: []
+  comments: []
 })
 
 var Book = mongoose.model('Book', bookSchema);
@@ -40,13 +40,13 @@ module.exports = function (app) {
       //json res format: [{"_id": bookid, "title": book_title, "commentcount": num_of_comments },...]
     })
 
-    .post(function (req, res) {
+    .post(async function (req, res) {
       try {
         var title = req.body.title;
 
-        if(!title) return res.json('No title');
-        
-        mongoose.connect(MONGODB_CONNECTION_STRING, {
+        if (!title) return res.json('No title');
+
+        await mongoose.connect(MONGODB_CONNECTION_STRING, {
             useNewUrlParser: true,
             useUnifiedTopology: true
           })
@@ -84,9 +84,38 @@ module.exports = function (app) {
     })
 
     // TODO - I can post a comment to /api/books/{id} to add a comment to a book and returned will be the books object similar to get /api/books/{id} including the new comment.
-    .post(function (req, res) {
-      var bookid = req.params.id;
-      var comment = req.body.comment;
+    .post(async function (req, res) {
+      try {
+        var bookid = req.params.id;
+        var comment = req.body.comment;
+
+        await mongoose.connect(MONGODB_CONNECTION_STRING, {
+          useNewUrlParser: true,
+          useUnifiedTopology: true
+        }).then(() => {
+          Book.findOneAndUpdate({
+            _id: bookid
+          }, {
+            $push: {
+              comments: comment
+            }
+          }, {
+            returnOriginal: false,
+            useFindAndModify: false
+          }, (err, doc) => {
+            if(err) {
+              console.log(err);
+              return res.json('could not create comment')
+            }
+            res.json(doc)
+          })
+        }).catch(err => {
+          console.log(err);
+          return res.json('could not create comment');
+        })
+      } catch {
+        err => console.log(err)
+      }
       //json res format same as .get
     })
 
