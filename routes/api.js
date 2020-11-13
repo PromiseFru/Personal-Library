@@ -99,7 +99,6 @@ module.exports = function (app) {
       };
     })
 
-    // TODO - I can send a delete request to /api/books to delete all books in the database. Returned will be 'complete delete successful' if successful.
     .delete(async function (req, res) {
       try {
         await mongoose.connect(MONGODB_CONNECTION_STRING, {
