@@ -190,9 +190,30 @@ module.exports = function (app) {
     })
 
     // TODO - I can delete /api/books/{_id} to delete a book from the collection. Returned will be 'delete successful' if successful.
-    .delete(function (req, res) {
+    .delete(async function (req, res) {
       var bookid = req.params.id;
-      //if successful response will be 'delete successful'
+
+      try {
+        await mongoose.connect(MONGODB_CONNECTION_STRING, {
+          useNewUrlParser: true,
+          useUnifiedTopology: true
+        }).then(() => {
+          Book.deleteOne({
+            _id: bookid
+          }, (err, result) => {
+            if (err) {
+              console.log(err);
+              res.json('could not delete');
+            }
+            res.json('delete successful')
+          })
+        }).catch(err => {
+          console.log(err);
+          res.json('could not delete')
+        })
+      } catch {
+        err => console.log(err)
+      }
     });
 
 };
