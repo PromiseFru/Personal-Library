@@ -10,6 +10,7 @@ var chaiHttp = require('chai-http');
 var chai = require('chai');
 var assert = chai.assert;
 var server = require('../server');
+const { request } = require('../server');
 
 chai.use(chaiHttp);
 
@@ -71,32 +72,41 @@ suite('Functional Tests', function () {
     suite('GET /api/books => array of books', function () {
 
       test('Test GET /api/books', function (done) {
-        //done();
+        chai.request(server)
+          .get('/api/books')
+          .end((err, res) => {
+            assert.equal(res.status, 200);
+            assert.isArray(res.body);
+            assert.property(res.body[0], 'commentcount');
+            assert.property(res.body[0], 'title');
+            assert.property(res.body[0], '_id');
+          })
+        done();
       });
 
     });
 
 
-    suite('GET /api/books/[id] => book object with [id]', function () {
+    // suite('GET /api/books/[id] => book object with [id]', function () {
 
-      test('Test GET /api/books/[id] with id not in db', function (done) {
-        //done();
-      });
+    //   test('Test GET /api/books/[id] with id not in db', function (done) {
+    //     //done();
+    //   });
 
-      test('Test GET /api/books/[id] with valid id in db', function (done) {
-        //done();
-      });
+    //   test('Test GET /api/books/[id] with valid id in db', function (done) {
+    //     //done();
+    //   });
 
-    });
+    // });
 
 
-    suite('POST /api/books/[id] => add comment/expect book object with id', function () {
+    // suite('POST /api/books/[id] => add comment/expect book object with id', function () {
 
-      test('Test POST /api/books/[id] with comment', function (done) {
-        //done();
-      });
+    //   test('Test POST /api/books/[id] with comment', function (done) {
+    //     //done();
+    //   });
 
-    });
+    // });
 
   });
 

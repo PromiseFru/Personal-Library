@@ -33,8 +33,6 @@ mongoose.connect(MONGODB_CONNECTION_STRING, {
 module.exports = function (app) {
 
   app.route('/api/books')
-    // TODO - I can get /api/books to retrieve an array of all books containing title, _id, and commentcount.
-    // TODO - If I try to request a book that doesn't exist I will be returned 'no book exists'.
     .get(async function (req, res) {
       try {
         await mongoose.connect(MONGODB_CONNECTION_STRING, {
@@ -70,8 +68,6 @@ module.exports = function (app) {
       } catch {
         err => console.log(err)
       }
-      //response will be array of book objects
-      //json res format: [{"_id": bookid, "title": book_title, "commentcount": num_of_comments },...]
     })
 
     .post(async function (req, res) {
@@ -112,6 +108,7 @@ module.exports = function (app) {
 
   app.route('/api/books/:id')
     // TODO - I can get /api/books/{id} to retrieve a single object of a book containing _title, _id, & an array of comments (empty array if no comments present).
+        // TODO - If I try to request a book that doesn't exist I will be returned 'no book exists'.
     .get(function (req, res) {
       var bookid = req.params.id;
       //json res format: {"_id": bookid, "title": book_title, "comments": [comment,comment,...]}
