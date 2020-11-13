@@ -189,7 +189,6 @@ module.exports = function (app) {
       }
     })
 
-    // TODO - I can delete /api/books/{_id} to delete a book from the collection. Returned will be 'delete successful' if successful.
     .delete(async function (req, res) {
       var bookid = req.params.id;
 
