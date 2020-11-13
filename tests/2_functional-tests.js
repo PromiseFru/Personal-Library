@@ -124,13 +124,34 @@ suite('Functional Tests', function () {
     });
 
 
-    // suite('POST /api/books/[id] => add comment/expect book object with id', function () {
+    suite('POST /api/books/[id] => add comment/expect book object with id', function () {
 
-    //   test('Test POST /api/books/[id] with comment', function (done) {
-    //     //done();
-    //   });
+      test('Test POST /api/books/[id] with comment', function (done) {
+        chai.request(server)
+          .post('/api/books')
+          .send({
+            title: 'Test book'
+          })
+          .end((err, res) => {
+            var id = res.body._id;
+            chai.request(server)
+              .post('/api/books/:id')
+              .params({
+                id: id
+              })
+              .send({
+                comment: 'test comment'
+              })
+              .end((err, res) => {
+                assert.equal(res.status, 200);
+                assert.equal(res.body._id, id);
+                assert.hasAllKeys(res.body, ['comments'])
+              })
+          })
+        done();
+      });
 
-    // });
+    });
 
   });
 
