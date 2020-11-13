@@ -100,19 +100,37 @@ module.exports = function (app) {
     })
 
     // TODO - I can send a delete request to /api/books to delete all books in the database. Returned will be 'complete delete successful' if successful.
-    .delete(function (req, res) {
-      //if successful response will be 'complete delete successful'
+    .delete(async function (req, res) {
+      try {
+        await mongoose.connect(MONGODB_CONNECTION_STRING, {
+          useNewUrlParser: true,
+          useUnifiedTopology: true
+        }).then(() => {
+          Book.deleteMany({}, (err, result) => {
+            if (err) {
+              console.log(err);
+              res.json('could not delete all');
+            }
+            res.json('complete delete successful')
+          })
+        }).catch(err => {
+          console.log(err);
+          res.json('could not delete all')
+        })
+      } catch {
+        err => console.log(err)
+      }
     });
 
 
 
   app.route('/api/books/:id')
-    .get(function (req, res) {
+    .get(async function (req, res) {
       try {
         var bookid = req.params.id;
 
         if (!bookid) return res.json('Please fill in an ID');
-        mongoose.connect(MONGODB_CONNECTION_STRING, {
+        await mongoose.connect(MONGODB_CONNECTION_STRING, {
           useNewUrlParser: true,
           useUnifiedTopology: true
         }).then(() => {
