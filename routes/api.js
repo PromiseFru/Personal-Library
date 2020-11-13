@@ -113,6 +113,7 @@ module.exports = function (app) {
       try {
         var bookid = req.params.id;
 
+        if (!bookid) return res.json('Please fill in an ID');
         mongoose.connect(MONGODB_CONNECTION_STRING, {
           useNewUrlParser: true,
           useUnifiedTopology: true
