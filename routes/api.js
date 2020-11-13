@@ -107,8 +107,6 @@ module.exports = function (app) {
 
 
   app.route('/api/books/:id')
-    // TODO - I can get /api/books/{id} to retrieve a single object of a book containing _title, _id, & an array of comments (empty array if no comments present).
-    // TODO - If I try to request a book that doesn't exist I will be returned 'no book exists'.
     .get(function (req, res) {
       try {
         var bookid = req.params.id;
